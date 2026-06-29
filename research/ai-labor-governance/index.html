@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Controlled Turn — AI, Labor and the Governance Gap</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap');
+
+  :root {
+    --ink:       #0f0e0c;
+    --paper:     #f7f4ee;
+    --mid:       #5a5750;
+    --rule:      #d4cfc4;
+    --accent:    #b84c1a;
+    --accent2:   #1a4cb8;
+    --warn:      #c8960c;
+    --safe:      #1e7e4e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 18px; background: var(--paper); color: var(--ink); }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.75;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 2.5rem 0 2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .deck {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--mid);
+    max-width: 620px;
+    line-height: 1.6;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.1rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .byline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--mid);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── BODY SECTIONS ── */
+  section { margin-bottom: 3.5rem; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin: 1.8rem 0 0.6rem;
+  }
+
+  p { margin-bottom: 1.1rem; }
+
+  /* ── DATA TABLES ── */
+  .data-block {
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent2);
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .data-block-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent2);
+    padding: 0.5rem 1rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    background: #faf9f6;
+  }
+
+  tbody td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.45;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: #faf9f6; }
+
+  .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+  }
+
+  .hi { color: var(--accent); font-weight: 600; }
+  .med { color: var(--warn); font-weight: 600; }
+  .lo { color: var(--safe); font-weight: 600; }
+
+  /* ── PULL QUOTE ── */
+  blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+    border-top: 2px solid var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 0;
+    margin: 2.5rem 0;
+  }
+
+  /* ── PHASE TIMELINE ── */
+  .phases {
+    display: grid;
+    gap: 0;
+    margin: 2rem 0;
+    border: 1px solid var(--rule);
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .phase:last-child { border-bottom: none; }
+
+  .phase-label {
+    background: var(--ink);
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    letter-spacing: 0.08em;
+  }
+
+  .phase-label .yr {
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .phase-content {
+    padding: 1rem 1.2rem;
+    font-size: 0.92rem;
+  }
+
+  .phase-content strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .phase-stat {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.4rem;
+  }
+
+  /* ── PROBABILITY BOX ── */
+  .prob-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 2rem 0;
+  }
+
+  .prob-card {
+    background: white;
+    padding: 1.2rem;
+  }
+
+  .prob-scenario {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.5rem;
+  }
+
+  .prob-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .prob-desc {
+    font-size: 0.83rem;
+    color: var(--mid);
+    line-height: 1.45;
+  }
+
+  /* ── FOOTNOTE ── */
+  .footnote {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--mid);
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    margin-top: 3rem;
+    line-height: 1.7;
+  }
+
+  /* ── SIGNAL BOX ── */
+  .signal-box {
+    background: #fff8f0;
+    border: 1px solid #e8c89a;
+    border-left: 4px solid var(--accent);
+    padding: 1.2rem 1.4rem;
+    margin: 2rem 0;
+    font-size: 0.9rem;
+  }
+
+  .signal-box-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  /* ── HORIZONTAL RULE ── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  /* ── CITATIONS ── */
+  sup.cite a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 500;
+    vertical-align: super;
+    line-height: 0;
+  }
+  sup.cite a:hover { text-decoration: underline; }
+
+  .ref-list {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--mid);
+    line-height: 1.9;
+  }
+  .ref-list ol { padding-left: 1.4rem; }
+  .ref-list li { margin-bottom: 0.5rem; }
+  .ref-list a { color: var(--accent2); word-break: break-all; }
+  .ref-list a:hover { text-decoration: underline; }
+  .ref-section-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+    margin: 1.5rem 0 0.8rem;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1.5rem 1rem 4rem; }
+    .phase { grid-template-columns: 80px 1fr; }
+    .prob-pct { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Policy Analysis · June 2026</div>
+  <h1>The <em>Controlled Turn</em><br>AI, Labor and the Governance Gap Nobody Is Filling</h1>
+  <p class="deck">AI displacement is not a storm to survive — it is a transition to be engineered. Without coordinated governance across industries and governments, the rational decisions of individual companies will produce an irrational collective catastrophe.</p>
+  <div class="byline">An independent analysis drawing on ILO, OECD, IMF, Anthropic Economic Index, FinOps Foundation, and Forrester Research data · 2026</div>
+</header>
+
+
+<!-- SECTION 1: THE CURRENT PICTURE -->
+<section>
+  <h2>Where We Stand: The Numbers Before the Wave</h2>
+
+  <p>The labor market data of mid-2026 looks deceptively calm. Global unemployment sits at 4.9%, OECD unemployment at 5.0% — near historic lows.<sup class="cite"><a href="#ref1">[1]</a></sup><sup class="cite"><a href="#ref2">[2]</a></sup> Inflation, which peaked at 9.6% in September 2022, has descended to a projected 3.6% for 2026.<sup class="cite"><a href="#ref3">[3]</a></sup> On the surface, the economy is recovering. Underneath, the structural pressures are already building.</p>
+
+  <p>Anthropic's own labor market research, published March 2026, introduced a new measure called <em>observed exposure</em> — the fraction of job tasks that LLMs are not just theoretically capable of automating, but are already automating in real API traffic. The numbers are sobering: Computer Programmers are 75% covered. Customer Service Representatives 67%. Financial Analysts in the same bracket.<sup class="cite"><a href="#ref4">[4]</a></sup> The critical finding: these are not future projections. This is already happening, today, invisibly, in enterprise workflows.</p>
+
+  <p>Yet the displacement has not yet surfaced in aggregate unemployment — with one significant exception. Among workers aged 22–25, job-finding rates in AI-exposed occupations have fallen by approximately 14% since late 2022, a finding that is directionally consistent with Brynjolfsson et al.'s independent ADP data, but which the Anthropic researchers themselves flag as <em>barely statistically significant</em> and subject to alternative interpretations.<sup class="cite"><a href="#ref4">[4]</a></sup><sup class="cite"><a href="#ref5">[5]</a></sup> The young are absorbing the first dose of a wave the headline statistics have not yet registered — but the signal is early and contested, not confirmed.</p>
+
+  <div class="data-block">
+    <div class="data-block-title">Table 1 — Current Baseline: Key Economic Indicators (2024–2026)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>2022</th>
+          <th>2024</th>
+          <th>2026 (proj.)</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Global unemployment rate (ILO)</td>
+          <td class="num">5.0%</td>
+          <td class="num">5.0%</td>
+          <td class="num lo">4.9%</td>
+          <td>Stable — pre-wave</td>
+        </tr>
+        <tr>
+          <td>OECD unemployment rate</td>
+          <td class="num">4.9%</td>
+          <td class="num">4.9%</td>
+          <td class="num lo">5.0%</td>
+          <td>Stable</td>
+        </tr>
+        <tr>
+          <td>Global youth unemployment (ILO, 15–24)</td>
+          <td class="num">12.6%</td>
+          <td class="num">12.6%</td>
+          <td class="num med">11.2%</td>
+          <td>Slight improvement, AI signal emerging</td>
+        </tr>
+        <tr>
+          <td>Global headline inflation (IMF)</td>
+          <td class="num hi">8.7%</td>
+          <td class="num">5.7%</td>
+          <td class="num lo">3.6%</td>
+          <td>Declining — but real wages still squeezed</td>
+        </tr>
+        <tr>
+          <td>OECD GDP growth (median)</td>
+          <td class="num">—</td>
+          <td class="num">3.2%</td>
+          <td class="num med">2.9%</td>
+          <td>Slowing — tariff pressure</td>
+        </tr>
+        <tr>
+          <td>AI-attributed job losses (US, annualised)</td>
+          <td class="num">~4,500</td>
+          <td class="num">~55,000</td>
+          <td class="num hi">accelerating</td>
+          <td>12× increase year-on-year to 2025 (CBS News); 2026 YTD already 9,200 in tech alone</td>
+        </tr>
+        <tr>
+          <td>AI observed exposure: Computer programmers</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num hi">75%</td>
+          <td>Highest of any occupation</td>
+        </tr>
+        <tr>
+          <td>Enterprise AI costs vs. budget projection</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num hi">73% over</td>
+          <td>FinOps Foundation 2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The paradox is this: the period of greatest danger is precisely the period that looks safest. When aggregate unemployment is low, political and corporate urgency to act is low. But the decisions being made now — which teams to cut, which roles to automate, which infrastructure to commit to — are the ones that will shape the wave's shape and speed.</p>
+</section>
+
+
+<!-- SECTION 2: THE FOUR FORCES -->
+<section>
+  <h2>Four Compounding Forces</h2>
+  <p>The risk is not AI displacement alone. It is four forces arriving simultaneously and interacting.</p>
+
+  <h3>Force 1 — AI Displacement: Faster Than the Pipeline</h3>
+  <p>The gap between theoretical AI capability and observed deployment is closing. Anthropic's measure shows Computer &amp; Math occupations at 94% theoretical coverage but only 33% current deployment.<sup class="cite"><a href="#ref4">[4]</a></sup> That 61-point gap will narrow, and the rate at which it narrows is the rate at which job tasks evaporate. The WEF Future of Jobs Report 2025, surveying over 1,000 employers across 55 economies, projects 92 million jobs displaced globally by 2030 against 170 million created — a net positive on paper that conceals a brutal transition gap of 5–8 years where the destruction precedes the creation.<sup class="cite"><a href="#ref6">[6]</a></sup></p>
+
+  <p>The ROI case for displacement is weaker than the announcements suggest. A 2026 MIT analysis found approximately 95% of generative AI pilots produced no measurable profit.<sup class="cite"><a href="#ref7">[7]</a></sup> IBM's parallel survey put the share of enterprises actually hitting expected AI ROI at just 25%.<sup class="cite"><a href="#ref7">[7]</a></sup> The gap is not model failure — it is workflow failure. The human capital needed to close that gap is being cut at the same moment it is most needed.</p>
+
+  <p>The occupational profile of the displaced is critical and counterintuitive. These are not low-skill workers. The Anthropic research confirms the most exposed group is female, educated, white-collar, and higher-earning — the opposite of every prior displacement wave.<sup class="cite"><a href="#ref4">[4]</a></sup> The social support systems designed for blue-collar cyclical unemployment do not fit this population. Retraining timelines are longer. Professional identity is more tightly bound to the role. The psychological cost — documented across prior deindustrialisation events in elevated rates of depression, substance use, family stress, and suicide — is higher per individual, and hits a demographic that has never before been the primary target of structural displacement at this scale.<sup class="cite"><a href="#ref8">[8]</a></sup></p>
+
+  <h3>Force 2 — AI Cost Unpredictability: The Hidden Budget Bomb</h3>
+  <p>Enterprises are not cutting workers and replacing them with stable, predictable AI costs. They are cutting workers and acquiring a volatile, usage-driven cost structure they do not yet know how to govern. In 2023, enterprises worried about training costs. By 2026, inference accounts for 85% of enterprise AI budgets — driven by agentic workflows triggering 10–20 LLM calls per task rather than one.<sup class="cite"><a href="#ref9">[9]</a></sup>
+
+  <div class="data-block">
+    <div class="data-block-title">Table 2 — AI Cost Dynamics vs. Human Cost Stability</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Cost Category</th>
+          <th>Human Employee</th>
+          <th>AI Stack (2026)</th>
+          <th>Risk Profile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Base cost predictability</td>
+          <td>High — fixed annual contract</td>
+          <td class="hi">Low — consumption-based</td>
+          <td class="hi">Critical</td>
+        </tr>
+        <tr>
+          <td>Scaling cost</td>
+          <td>Linear, negotiated</td>
+          <td class="hi">Superlinear in agentic loops</td>
+          <td class="hi">High</td>
+        </tr>
+        <tr>
+          <td>Vendor pricing risk</td>
+          <td>None</td>
+          <td class="hi">Rate changes with no notice</td>
+          <td class="hi">High</td>
+        </tr>
+        <tr>
+          <td>Geopolitical access risk</td>
+          <td>None</td>
+          <td class="hi">Model bans, sanctions, restrictions</td>
+          <td class="hi">High</td>
+        </tr>
+        <tr>
+          <td>Actual vs. budget variance</td>
+          <td>~3–5% typical</td>
+          <td class="hi">73% over projection (FinOps 2026)</td>
+          <td class="hi">Critical</td>
+        </tr>
+        <tr>
+          <td>True enterprise cost vs. list price</td>
+          <td>Known</td>
+          <td class="med">2–4× list after integration/ops</td>
+          <td class="med">High</td>
+        </tr>
+        <tr>
+          <td>Subsidy dependency</td>
+          <td>None</td>
+          <td class="hi">OpenAI spends $1.35 per $1 earned</td>
+          <td class="hi">Structural</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The subsidy problem is the most underappreciated risk in enterprise AI planning. OpenAI in 2025 generated $3.7 billion in revenue and lost approximately $5 billion — spending $1.35 for every dollar earned. The pricing enterprises have budgeted around is underwritten by venture capital and hyperscaler cross-subsidies. A Turing Award-winning Google researcher identified AI inference cost as the primary economic bottleneck preventing AI companies from reaching profitability.<sup class="cite"><a href="#ref10">[10]</a></sup> When those subsidies correct — through IPO pressure, investor exhaustion, or market consolidation — the price floor rises sharply. The companies that have already shed their human bench will have no fallback.</p>
+
+  <h3>Force 3 — Geopolitical Model Risk: The Infrastructure You Cannot Control</h3>
+  <p>DeepSeek's January 2025 launch demonstrated that frontier AI capability is no longer a US monopoly. It also triggered the most significant enterprise AI governance crisis of the decade. Italy banned it within days. Australia blocked it across government systems and major universities. Taiwan, South Korea, and multiple US federal agencies followed. The EU, operating under GDPR and the AI Act, found its data processing practices non-compliant across multiple member states.<sup class="cite"><a href="#ref11">[11]</a></sup><sup class="cite"><a href="#ref12">[12]</a></sup></p>
+
+  <p>For enterprises that had begun integrating Chinese AI APIs for cost reasons — DeepSeek offered frontier performance at a fraction of Western prices — the bans were catastrophic. Workflows built on these APIs broke overnight. No SLA covered geopolitical force majeure. Australia's Department of Home Affairs found that their emergency alert prototype would have failed silently in a sanctions event, reverting to static templates with no alert to administrators.<sup class="cite"><a href="#ref12">[12]</a></sup></p>
+
+  <p>This is the infrastructure fragility nobody budgeted for. A single geopolitical event can render an enterprise's entire AI stack inoperable, with no human team left to absorb the work. DeepSeek experienced repeated outages in 2025 — including a 7-hour outage in March — with no SLA-based compensation and no contractual failover guarantee.<sup class="cite"><a href="#ref13">[13]</a></sup></p>
+
+  <h3>Force 4 — Labor Market Feedback: The Deflation Trap</h3>
+  <p>The fourth force is the one that closes the loop into crisis — and the one most absent from corporate AI investment models. Mass displacement floods the labor market. Wage floors collapse. Research on prior technology transitions suggests that within 2–4 years of a major displacement wave, the newly deflated cost of human labor begins to approach the total operational cost of the AI stack that replaced it — inference fees, orchestration overhead, governance burden, outage risk, prompt engineering maintenance, and agentic operator retraining costs. At that point the cost arbitrage that justified displacement has reversed. But the companies that moved first no longer have the human bench to reinstate — the institutional memory, the client relationships, the domain expertise, is gone and cannot be recovered at speed.</p>
+
+  <blockquote>"Ford paid workers enough to buy his cars. If you automate away the workers, nobody buys anything. The companies that cut fastest will find their own markets shrinking."</blockquote>
+
+  <p>Consumer demand contraction follows unemployment at a 12–18 month lag. The mechanism is direct: displaced white-collar workers spend proportionally more on services, software, and discretionary consumption than the workers in prior displacement waves. When they stop spending, the B2B and B2C markets that enterprise AI companies depend on contract. Goldman Sachs data suggests each 1-point productivity gain from technology raises short-run unemployment by approximately 0.3 points in the short run — an effect usually temporary when absorbing sectors exist at scale.<sup class="cite"><a href="#ref14">[14]</a></sup> The critical unknown is whether absorbing sectors at that scale exist this time. Tax base erosion follows demand contraction. Social infrastructure — healthcare, housing support, retraining programs — faces maximum demand at the precise moment of minimum public funding. The companies that raced to automate discover they have optimised their cost base into a market that can no longer afford their products.</p>
+</section>
+
+
+<!-- SECTION 3: PRIOR MARKET RESPONSES -->
+<section>
+  <h2>What History Tells Us: Prior Disruption Responses</h2>
+  <p>Three prior disruption events provide the reference class for what happens when major economic transitions are unmanaged, partially managed, and well-managed.</p>
+
+  <div class="data-block">
+    <div class="data-block-title">Table 3 — Prior Disruption Events: Response and Outcome</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Peak Unemployment</th>
+          <th>Governance Response</th>
+          <th>Outcome</th>
+          <th>Recovery Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>US Deindustrialisation (1975–1985)</td>
+          <td class="num hi">10.8% (1982)</td>
+          <td>Minimal — market-led</td>
+          <td>Rust Belt structural collapse. Drug epidemic. Political radicalisation. Communities never recovered.</td>
+          <td class="hi">Never fully</td>
+        </tr>
+        <tr>
+          <td>Global Financial Crisis (2008–2010)</td>
+          <td class="num hi">10.0% (US peak)</td>
+          <td>Reactive — fiscal stimulus after collapse</td>
+          <td>Southern European youth unemployment exceeded 50%. Austerity drove decade of social unrest. Populist political surge 2014–2019.</td>
+          <td class="hi">7–10 years</td>
+        </tr>
+        <tr>
+          <td>China Trade Shock (2001–2016)</td>
+          <td class="num med">Localised 15–25%</td>
+          <td>None — policy assumed reabsorption</td>
+          <td>2.4 million US manufacturing jobs lost. Reabsorption never materialised. Directly linked to 2016 electoral outcomes.</td>
+          <td class="hi">Structural, ongoing</td>
+        </tr>
+        <tr>
+          <td>COVID-19 (2020–2021)</td>
+          <td class="num hi">14.7% (US peak, Apr 2020)</td>
+          <td>Rapid — furlough schemes, direct payments, short-time work across OECD</td>
+          <td>Employment returned to pre-COVID levels faster than any prior shock of comparable scale. OECD employment and participation rates had recovered to record highs by 2023. Speed of recovery directly attributed to furlough mechanisms that kept workers attached to employers during the shock.</td>
+          <td class="lo">Within 2 years (OECD 2023 data)</td>
+        </tr>
+        <tr>
+          <td>German Reunification (1990–2000)</td>
+          <td class="num med">~18% East Germany specifically</td>
+          <td>Proactive — Treuhandanstalt restructuring agency, Kurzarbeit (short-time work) expansion funded by federal government</td>
+          <td>Painful but managed. Short-time work kept workers attached to employers during restructuring. Western Germany remained stable. Social cohesion maintained. East Germany required decade-long investment and never fully converged.</td>
+          <td class="med">~10 years with sustained federal support; partial</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The pattern is unambiguous. Rapid, unmanaged displacement produces structural damage that persists for decades. Managed transition — even imperfect management — produces recovery. COVID-19 is the critical comparator: the reason recovery was fast was that governments acted <em>before</em> the social damage compounded. The furlough mechanism kept workers attached to employers during the shock, preserving the human capital and the institutional relationship that enabled rapid restart.<sup class="cite"><a href="#ref2">[2]</a></sup></p>
+
+  <p>The AI transition requires the same logic applied proactively, not reactively. The German Kurzarbeit model — pay workers to work reduced hours during transition rather than pay them nothing after displacement — is directly applicable. The COVID furlough model — state-subsidised attachment during a period of structural uncertainty — is directly applicable. What is not applicable is the assumption that the market will self-correct.</p>
+
+  <div class="signal-box">
+    <div class="signal-box-title">⚠ Key Historical Signal</div>
+    Research on adverse market events and social outcomes shows that unemployment correlates most clearly with property crime (not violent crime, where the relationship is weak and contested across the literature<sup class="cite"><a href="#ref15">[15]</a></sup>) and with health deterioration — depression, substance use, domestic stress, and suicide rates. Suicide and crisis behaviours in particular lag the initial economic stressor by up to two years, per NIH research, opening what investigators describe as a "policy window for intervention."<sup class="cite"><a href="#ref16">[16]</a></sup> The social cost of unmanaged displacement does not appear immediately. By the time it is visible in crisis statistics, the intervention window has closed. Deindustrialisation research is unambiguous on one point: communities that lose their primary employment base in an unmanaged transition do not recover on their own timescale — the damage compounds generationally.<sup class="cite"><a href="#ref8">[8]</a></sup>
+  </div>
+</section>
+
+
+<!-- SECTION 4: THE ANTIBIOTIC FRAMEWORK -->
+<section>
+  <h2>The Antibiotic Protocol: A Five-Year Controlled Turn</h2>
+
+  <p>The correct analogy for governing this transition is antibiotic dosing. You do not administer the full course in a single injection — you would kill the host along with the infection. You titrate. You observe systemic response. You hold at each stage until absorption is confirmed. You adjust the next dose based on what you learned.</p>
+
+  <p>Applied to AI labor transition, this produces a five-year phased protocol with mandatory observation gates between each phase. Critically, the gates are not voluntary corporate pauses. They are regulatory checkpoints — equivalent to a clinical trial's Data Safety Monitoring Board — that review population-level economic indicators before clearing the next phase.</p>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-label">
+        <span class="yr">Y1</span>
+        DOSE 1
+      </div>
+      <div class="phase-content">
+        <strong>Attrition-Only Displacement — 8–10%</strong>
+        No active redundancies. Stop backfilling departures. Voluntary exit incentives. Natural retirement acceleration. Redeploy AI-exposed roles to agentic oversight functions. Begin mandatory retraining investment: minimum 3% of AI spend directed to workforce transition per regulatory requirement.
+        <div class="phase-stat">Target: displacement within normal annual churn range (5–10%). Market does not register as shock.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <span class="yr">Y2</span>
+        OBSERVE
+      </div>
+      <div class="phase-content">
+        <strong>Mandatory Absorption Window — No Net Cuts</strong>
+        Regulatory gate: independent DSM Board reviews aggregate unemployment rate, wage floor stability, retraining uptake rates, and agentic stack reliability data. Phase 3 does not unlock until all indicators are within defined thresholds. Companies use this period to verify whether agentic teams are genuinely productive or theoretically productive — a distinction most have not honestly made.
+        <div class="phase-stat">Gate condition: unemployment must not have risen more than 0.5pp in AI-exposed occupations. Retraining pipeline must show >40% conversion rate.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <span class="yr">Y3</span>
+        DOSE 2
+      </div>
+      <div class="phase-content">
+        <strong>Informed Structural Reduction — 10–12%</strong>
+        Now guided by two years of real data. Roles that genuinely did not return are formally closed. New role categories — agentic coordinators, AI governance leads, process orchestrators — are staffed from the displaced pool with targeted conversion. Management layers that existed only to coordinate now-smaller teams are reduced, but senior judgment roles are preserved.
+        <div class="phase-stat">Cumulative displacement: 18–22%. New role creation should be absorbing 30–40% of displaced workers by this point.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <span class="yr">Y4</span>
+        OBSERVE
+      </div>
+      <div class="phase-content">
+        <strong>Second Absorption Window</strong>
+        Second regulatory gate. Consumer demand indicators reviewed — early warning of the deflation trap. If labor market shows flooding (wage floors below AI stack equivalence), Phase 5 is delayed or restructured. AI cost indicators reviewed: if hyperscaler subsidy withdrawal has begun driving price corrections, the case for further displacement reverses.
+        <div class="phase-stat">Gate condition: consumer demand index stable. No sector showing wage floor below AI operational equivalence. AI cost volatility index within acceptable range.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <span class="yr">Y5</span>
+        FINAL
+      </div>
+      <div class="phase-content">
+        <strong>Final Calibration — Data-Guided, Not Target-Driven</strong>
+        The final phase is explicitly not a fixed percentage target. It is whatever the preceding four years of real-world data indicate is sustainable. Total displacement may reach 30–35% or may not. The point is that the decision is made with actual economic evidence, not 2024 projections. The 5-year protocol ends with a labor market that has adapted rather than collapsed.
+        <div class="phase-stat">Target: net new role creation in AI-adjacent categories exceeds displacement rate. No sector in structural unemployment above 8%.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 5: UNIONS — THE MISSING FORCE -->
+<section>
+  <h2>The Missing Force: Unions, Collective Bargaining, and the Representation Gap</h2>
+
+  <p>Every framework discussed in this article so far assumes that governance will be imposed top-down — by regulators, international bodies, and legislation. This assumption skips the most historically effective mechanism for managing technology transitions at the workplace level: organised labour. Unions are not mentioned in most AI governance discussions. That omission is not an accident. It is a structural problem that makes every other governance mechanism harder to enforce.</p>
+
+  <h3>The Structural Collapse of the Mechanism That Should Be Doing This</h3>
+
+  <p>OECD data published in September 2025 is blunt: union density — the share of workers who are union members — has halved since 1985, falling from 30% to 15% across the OECD in 2024. Collective bargaining coverage, the share of workers covered by any collective agreement, has fallen from 47% in 1985 to 33.6% in 2024.<sup class="cite"><a href="#ref22">[22]</a></sup> In the private sector — where AI displacement is most acute — the picture is worse. Across the OECD, only 10.1% of private sector workers are unionised. In the United States the private sector rate hit a new all-time low of 5.9% in 2024.<sup class="cite"><a href="#ref23">[23]</a></sup></p>
+
+  <p>This matters enormously because the occupations most exposed to AI displacement — computer programmers, financial analysts, customer service roles, data entry, administrative support — are precisely the white-collar private sector roles with the lowest union coverage in the OECD. The workers most at risk are the workers with the least collective bargaining power. The Anthropic research confirms the exposed population is educated, higher-earning, and predominantly in professional occupations.<sup class="cite"><a href="#ref4">[4]</a></sup> These are not historically unionised demographics. In half of all OECD member states, including the United States, Canada, the United Kingdom, Japan, and South Korea, fewer than one in six private sector workers has access to collective bargaining at all.<sup class="cite"><a href="#ref22">[22]</a></sup></p>
+
+  <p>The Brookings Institution put this precisely: in the top three industries with the highest AI exposure, unions represent an even smaller percentage of workers than the already low national average. The workers who most need collective protection against displacement are the workers least able to bargain collectively for it.<sup class="cite"><a href="#ref24">[24]</a></sup></p>
+
+  <h3>Where Unions Have Acted — and What It Proved</h3>
+
+  <p>The 2023 WGA and SAG-AFTRA strikes are the most significant test case so far of what organised labour can achieve against AI displacement. After 148 days — the second-longest strike in WGA history — 11,500 screenwriters secured the first collective bargaining agreement in any industry to explicitly regulate AI use. The agreement established that AI is not a writer, that AI-generated material cannot constitute "literary material" under the agreement, and that studios cannot use writers' material to train AI models without consent. The WGA's approach was not to ban AI but to shape its deployment: to establish that augmentation is permissible, replacement is not, and workers must have a voice in how the technology is introduced.<sup class="cite"><a href="#ref24">[24]</a></sup><sup class="cite"><a href="#ref25">[25]</a></sup></p>
+
+  <p>The ILA (International Longshoremen's Association) port strike in October 2024 shut down all major US East and Gulf Coast ports over automation of gates, cranes, and container vehicles. The resulting 2025 collective bargaining agreement prohibits fully automated technology — equipment operating without any human interaction — and requires union agreement before any new technology is introduced. Disputes go to binding arbitration.<sup class="cite"><a href="#ref26">[26]</a></sup> These are not symbolic victories. They are enforceable contractual constraints on the rate of AI deployment, negotiated at industry level, with teeth.</p>
+
+  <p>The Las Vegas Culinary Workers secured advance notice and bargaining rights over AI implementation from major casino operators in 2023. The American Postal Workers Union established "no layoff" clauses decades ago that successfully protected postal workers through successive rounds of automation. The ZeniMax workers' Microsoft agreement included the first tech-sector AI bargaining provisions in 2023.<sup class="cite"><a href="#ref26">[26]</a></sup> Each of these is, in effect, a miniature version of the antibiotic protocol applied at enterprise or sector level: mandatory consultation before deployment, enforced pacing, workers retaining a voice in the transition timeline.</p>
+
+  <h3>Why These Victories Are Insufficient at Scale — and What the Coverage Gap Means</h3>
+
+  <p>The WGA victory covered 11,500 writers. The ILA agreement covered US port workers. The Culinary Workers agreement covered Las Vegas casino staff. These are real protections for real people. They are also entirely unrepresentative of the 60–70% of the AI-exposed workforce that has no union, no collective agreement, and no legal mechanism to demand consultation before their role is automated.</p>
+
+  <p>The Brookings analysis is the sharpest framing of this gap: the WGA succeeded in part because it could bargain at the <em>sector level</em>, not just the enterprise level. Sector-level bargaining — where a single agreement covers an entire industry regardless of which employer — is the mechanism that made German Kurzarbeit effective, that makes Nordic labour transitions manageable, and that makes collective AI governance possible at meaningful scale. In the United States and United Kingdom, sector-level bargaining has been structurally dismantled since the 1980s. The coverage rate in those countries is now below 15% of private sector workers.<sup class="cite"><a href="#ref22">[22]</a></sup> The mechanism that would allow organised labour to be a force in AI governance does not exist in the economies where AI deployment is fastest.</p>
+
+  <p>There is one further dimension that makes the union question urgent beyond its own merits: AI is itself being deployed as a union-busting tool. Employers are using AI monitoring systems to identify organising activity, algorithmic management to eliminate the human supervisory relationships in which union sentiment builds, and automated scheduling to prevent the stable shift patterns that enable organising. The tool being used to displace workers is simultaneously being used to prevent those workers from building the collective power to resist displacement. This is not a theoretical concern — it is documented across multiple NLRB filings and academic literature on surveillance in gig and platform work.<sup class="cite"><a href="#ref27">[27]</a></sup></p>
+
+  <h3>What Unions Add to the Governance Framework</h3>
+
+  <p>Unions are not a substitute for the regulatory framework proposed in this article. They are the enforcement layer that makes regulatory frameworks function at the workplace level. A displacement rate protocol without union representation has no one to verify compliance on the ground. A retraining investment ratio without workers who can audit how that money is spent has no enforcement mechanism below the regulator. An independent gate authority reviewing aggregate indicators has no visibility into what is happening inside individual organisations — unless organised workers inside those organisations have the legal right to report it.</p>
+
+  <p>The governance architecture this article proposes therefore requires a parallel union agenda: legal reform to restore sector-level bargaining rights in economies where they have been dismantled; mandatory information and consultation rights triggered by AI adoption decisions, regardless of union status (the EU Works Council model is the template); and explicit AI bargaining obligations — requiring employers to consult and negotiate before deploying automation that materially changes job content, headcount, or task distribution. The EU AI Act gestures at this in its high-risk AI provisions but does not mandate it for workforce AI at the scale that matters.</p>
+
+  <div class="signal-box">
+    <div class="signal-box-title">⚠ The Representation Arithmetic</div>
+    The workers most exposed to AI displacement — white-collar, educated, private sector, in Computer &amp; Math and Office &amp; Admin occupations — are covered by collective bargaining at approximately 10% OECD average in the private sector, and below 6% in the US private sector. The workers least exposed — public sector, manual trades, physical service roles — are covered at 41% (OECD public sector average). The governance gap and the representation gap are not coincidental. They map onto each other exactly. The workers who need protection most are the workers with the least institutional power to demand it.
+  </div>
+</section>
+
+
+<!-- SECTION 6: WHY NO SINGLE COMPANY CAN DO THIS -->
+<section>
+  <h2>The Coordination Problem: Why Voluntary Is Not Enough</h2>
+
+  <p>The antibiotic protocol described above is entirely rational. It is also impossible for any single company to implement voluntarily. The reason is structural: a company that moves slowly and responsibly is immediately undercut by a competitor that moves fast and recklessly. In a quarterly earnings environment, responsible transition is penalised not rewarded. The prisoner's dilemma is not a metaphor here — it is the exact operating mechanism.</p>
+
+  <p>Consider the arithmetic: if Company A keeps 80% of its workforce through Year 2, invests in retraining, and runs phased transition, it carries higher headcount costs for 24 months while its agentic capability matures. Company B cuts to 60% immediately and reports stronger margins. Company B's stock rises. Institutional investors who hold both stocks sell A and buy B. Company A's board receives a letter from its largest shareholder asking why it is 20 points behind on workforce efficiency. Company A matches. The responsible position is economically untenable for any individual actor — not because executives are callous, but because capital markets structurally reward speed over safety.</p>
+
+  <p>The loyalty premium — the reputational benefit of responsible transition in long-term talent acquisition, customer trust, and regulatory goodwill — does not appear in quarterly earnings. No current CFO model prices it at a level that competes with 20 points of margin difference. This is not a failure of individual corporate ethics. It is a systemic incentive failure that only binding coordination can resolve.</p>
+
+  <p>This means the transition protocol must be a condition of operating, not a competitive choice. The closest real-world analogues are capital adequacy requirements in banking (Basel III), emissions trading schemes, and pharmaceutical clinical trial governance — industries where individual actors would not self-regulate and were given frameworks that made responsible behaviour the only economically rational option. In each case, the framework did not prevent the industry from operating profitably. It prevented it from externalising its costs onto the public.</p>
+
+  <p>For AI labor transition, this means: mandatory displacement reporting to a central regulatory body; maximum displacement rates per phase enforced by financial penalty; minimum retraining investment ratios tied to AI adoption spend; and an independent gate authority with genuine power to delay Phase transitions based on economic evidence. The EU is the most likely initial venue given existing precedent with the AI Act and GDPR. But a European-only standard that US and Asian competitors can ignore simply relocates the problem and punishes European companies for compliance. It must be multinational or it is cosmetic.</p>
+</section>
+
+
+<!-- SECTION 7: PROBABILITIES -->
+<section>
+  <h2>Probability Assessment: Scenarios Through 2031</h2>
+
+  <p>Based on current trajectory, institutional capacity, and historical precedent, the following probability distribution is offered for the 5-year outlook. These are not predictions — they are informed estimates of scenario likelihood given current evidence.</p>
+
+  <div class="prob-grid">
+    <div class="prob-card">
+      <div class="prob-scenario">Scenario A — Controlled Turn</div>
+      <div class="prob-pct lo">12%</div>
+      <div class="prob-desc">Coordinated international governance framework adopted. Phased protocol enforced. Absorption gates respected. Transition completes with manageable unemployment peak of 9–11% in exposed occupations. New role categories absorb majority of displaced workers by 2030.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-scenario">Scenario B — Partial Governance</div>
+      <div class="prob-pct med">34%</div>
+      <div class="prob-desc">EU framework adopted; US and Asia do not align. European companies face compliance overhead while competitors move faster. Partial protection in regulated markets; unmanaged displacement elsewhere. Unemployment in exposed OECD occupations peaks at 14–18%. Political instability in non-regulated markets.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-scenario">Scenario C — AI Cost Correction</div>
+      <div class="prob-pct med">28%</div>
+      <div class="prob-desc">Hyperscaler subsidy withdrawal triggers major AI pricing event 2027–2028. Companies that displaced aggressively find AI stack costs exceed newly deflated human labor costs. Forced reversion. Unemployment peaks at 18–22% during trough, then recovers as hiring restarts at lower wages. Permanent wage floor compression.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-scenario">Scenario D — Unmanaged Cascade</div>
+      <div class="prob-pct hi">26%</div>
+      <div class="prob-desc">No governance framework. Companies race to maximum displacement. Labor market floods 2027–2029. Consumer demand contracts. AI ROI collapses (already at 25% per IBM). Tax base erosion destabilises social infrastructure. Geopolitical AI access event (model ban, sanctions) disrupts agentic stacks simultaneously. Structural unemployment above 20% in exposed occupations. Political consequences severe and long-duration.</div>
+    </div>
+  </div>
+
+  <div class="data-block">
+    <div class="data-block-title">Table 4 — Probability Drivers by Force</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Force</th>
+          <th>Current Direction</th>
+          <th>Probability of Crisis Contribution</th>
+          <th>Governance Lever Available?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI labor displacement speed</td>
+          <td>Accelerating — 12× increase in attributed cuts 2022–2025</td>
+          <td class="num hi">High</td>
+          <td>Yes — phased displacement regulation</td>
+        </tr>
+        <tr>
+          <td>AI cost unpredictability</td>
+          <td>Worsening — 73% of enterprises over budget; inference cost dominant</td>
+          <td class="num hi">High</td>
+          <td>Partial — multi-provider architecture; FinOps mandates</td>
+        </tr>
+        <tr>
+          <td>Vendor subsidy correction</td>
+          <td>Structural — OpenAI $5B loss on $3.7B revenue</td>
+          <td class="num med">Medium-High (2027–2028 window)</td>
+          <td>No — market mechanism</td>
+        </tr>
+        <tr>
+          <td>Geopolitical model access risk</td>
+          <td>Escalating — DeepSeek bans across 10+ jurisdictions in 2025</td>
+          <td class="num med">Medium</td>
+          <td>Partial — provider-agnostic architecture mandates</td>
+        </tr>
+        <tr>
+          <td>Labor market deflation loop</td>
+          <td>Not yet visible — lagging indicator</td>
+          <td class="num hi">High if displacement unmanaged</td>
+          <td>Yes — wage floor policy, minimum retraining ratios</td>
+        </tr>
+        <tr>
+          <td>Social infrastructure capacity</td>
+          <td>Designed for cyclical unemployment peaks — OECD safety nets calibrated to Great Recession-era 8–12% scenarios (analytical assessment; no system has been stress-tested at 20%+ structural displacement)</td>
+          <td class="num hi">High</td>
+          <td>Yes — proactive capacity investment now, before the wave</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- SECTION 8: WHAT NEEDS TO HAPPEN -->
+<section>
+  <h2>The Governance Architecture Required</h2>
+
+  <p>The window for proactive governance is approximately 2026–2028. After that, the displacement wave is in motion and interventions shift from prevention to damage control. Three structural mechanisms are necessary.</p>
+
+  <h3>1. A Displacement Rate Protocol — The Basel III for Labor</h3>
+  <p>Binding maximum displacement rates per industry per year, enforced across all operating companies in participating jurisdictions. Not voluntary targets. Rates tied to verified absorption capacity in the labor market — when absorption is confirmed, rates can accelerate. When it is not, they cannot. This is not protectionism — it is sequencing. The same number of people may ultimately be displaced; the question is whether the system can absorb them.</p>
+
+  <h3>2. Mandatory Retraining Investment Ratios</h3>
+  <p>A minimum percentage of AI adoption spend directed to workforce transition programs. As an original policy proposal, we suggest 5% as a starting benchmark — calibrated to be material enough to fund genuine retraining pipelines but not punitive enough to suppress legitimate AI investment. This converts AI investment from a pure cost-reduction exercise to a dual-mandate exercise: reduce cost AND invest in the human capital the organization is restructuring away from. The ratio creates a direct financial incentive for companies to make retraining succeed, because failure means they have spent the levy for nothing. The precedent exists: the UK Apprenticeship Levy mandates 0.5% of payroll from large employers; this proposal adapts the same logic to AI adoption spend.</p>
+
+  <h3>3. An Independent Transition Gate Authority</h3>
+  <p>An ILO-convened body with representation from major economies, empowered to review population-level indicators quarterly and issue Phase clearances or delays. Not an advisory body — a regulatory authority with binding power. Modelled on the Data Safety Monitoring Boards used in clinical trials: independent, evidence-driven, and accountable to the public interest rather than the industry's quarterly cycle.</p>
+
+  <p>None of these mechanisms are technically complex. The economic modeling tools exist. The labor market data infrastructure exists across OECD countries. The legal frameworks for international regulatory coordination exist — Basel III and the Paris Agreement demonstrate that multinational binding frameworks are achievable even when individual actors resist. What is required is the political decision that this transition is a public health emergency in slow motion, that it is already underway in the data for workers aged 22–25, and that the window for proactive governance is closing.</p>
+
+  <p>The alternative is leaving the dosing decision to 10,000 companies simultaneously, each acting rationally in their own interest, collectively administering a lethal dose to the patient they all depend on. History is clear on what follows: Rust Belt communities that never recovered. Southern European youth cohorts with 50% unemployment who drove a decade of political instability. Trade-shock towns that became opioid epicentres. The AI displacement wave, if unmanaged, will produce the same outcomes — faster, at larger scale, and in the white-collar demographic that OECD governments have never designed crisis infrastructure to support. The question is not whether the governance framework is necessary. The question is whether it arrives before the cascade or after it.</p>
+</section>
+
+
+<hr>
+
+<div class="ref-list">
+  <div class="ref-section-title">References</div>
+  <ol>
+    <li id="ref1">ILO, <em>Employment and Social Trends 2026</em>, International Labour Organization, January 2026. Global unemployment projected at 4.9% (186 million people).<br>
+    → <a href="https://www.ilo.org/publications/flagship-reports/employment-and-social-trends-2026" target="_blank">https://www.ilo.org/publications/flagship-reports/employment-and-social-trends-2026</a></li>
+
+    <li id="ref2">OECD, <em>Unemployment Rates — Updated February 2026</em>, OECD Statistical Release, February 12, 2026. OECD rate stable at 5.0% in December 2025.<br>
+    → <a href="https://www.oecd.org/en/data/insights/statistical-releases/2026/02/unemployment-rates-updated-february-2026.html" target="_blank">https://www.oecd.org/en/data/insights/statistical-releases/2026/02/unemployment-rates-updated-february-2026.html</a></li>
+
+    <li id="ref3">The Global Statistics / IMF WEO, <em>Global CPI Statistics 2026</em>, April 2026. Global headline inflation peaked at 9.6% (Sept 2022), projected 3.6% for 2026 per IMF World Economic Outlook Jan 2026 Update.<br>
+    → <a href="https://www.theglobalstatistics.com/global-cpi-statistics/" target="_blank">https://www.theglobalstatistics.com/global-cpi-statistics/</a></li>
+
+    <li id="ref4">Massenkoff, M. &amp; McCrory, P., <em>Labor Market Impacts of AI: A New Measure and Early Evidence</em>, Anthropic, March 5, 2026. Source for observed exposure metric; Computer Programmer 75% coverage; 94% theoretical vs 33% actual for Computer &amp; Math; 14% youth hiring decline (flagged as barely statistically significant); demographic profile of exposed workers.<br>
+    → <a href="https://www.anthropic.com/research/labor-market-impacts" target="_blank">https://www.anthropic.com/research/labor-market-impacts</a></li>
+
+    <li id="ref5">Brynjolfsson, E., Chandar, B. &amp; Chen, R., <em>Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence</em>, Digital Economy Lab, 2025. ADP payroll data corroborating youth hiring slowdown in AI-exposed occupations.<br>
+    → Cited in ref [4] above; accessible via NBER/SSRN.</li>
+
+    <li id="ref6">World Economic Forum, <em>Future of Jobs Report 2025</em>, WEF, 2025. 92 million jobs displaced, 170 million created globally by 2030; 86% of businesses affected by AI by 2030; survey of 1,000+ employers across 55 economies.<br>
+    → <a href="https://www.weforum.org/reports/the-future-of-jobs-report-2025" target="_blank">https://www.weforum.org/reports/the-future-of-jobs-report-2025</a></li>
+
+    <li id="ref7">DWU Consulting / MIT Analysis, <em>AI Revolution and the US Economy</em>, March 15, 2026. 95% of generative AI pilots producing no measurable profit (MIT analysis); IBM survey: 25% of enterprises hitting expected ROI.<br>
+    → <a href="https://dwuconsulting.com/dwu-ai/ai-revolution-us-economy" target="_blank">https://dwuconsulting.com/dwu-ai/ai-revolution-us-economy</a></li>
+
+    <li id="ref8">YSU Center for Working-Class Studies, <em>The Social Costs of Deindustrialisation</em>, Youngstown State University. Psychological, health, and social costs of unmanaged structural job loss: depression, substance use, family stress, suicide, overburdened health systems.<br>
+    → <a href="https://ysu.edu/center-working-class-studies/social-costs-deindustrialization" target="_blank">https://ysu.edu/center-working-class-studies/social-costs-deindustrialization</a></li>
+
+    <li id="ref9">Orchestrator.dev, <em>AI Cost Control: Breaking Free from Vendor Lock-In</em>, March 27, 2026. Inference at 85% of enterprise AI budgets; agentic loops triggering 10–20 LLM calls per task; enterprise implementations cost 2–4× advertised list price.<br>
+    → <a href="https://orchestrator.dev/blog/2026-03-27-ai-cost-control-vendor-strategy/" target="_blank">https://orchestrator.dev/blog/2026-03-27-ai-cost-control-vendor-strategy/</a></li>
+
+    <li id="ref10">Oplexa, <em>AI Inference Cost Crisis 2026</em>, March 31, 2026. OpenAI 2025: $3.7B revenue, ~$5B losses ($1.35 spent per $1 earned). Turing Award-winning Google researcher identifies inference cost as primary AI profitability bottleneck. Current API pricing underwritten by VC and hyperscaler cross-subsidies.<br>
+    → <a href="https://oplexa.com/ai-inference-cost-crisis-2026/" target="_blank">https://oplexa.com/ai-inference-cost-crisis-2026/</a></li>
+
+    <li id="ref11">CSIS, <em>Delving into the Dangers of DeepSeek</em>, Center for Strategic and International Studies, March 2025. DeepSeek bans in Italy, Taiwan, Australia, South Korea; GDPR non-compliance; data stored under PRC law; security vulnerabilities.<br>
+    → <a href="https://www.csis.org/analysis/delving-dangers-deepseek" target="_blank">https://www.csis.org/analysis/delving-dangers-deepseek</a></li>
+
+    <li id="ref12">Alibaba / Saeree, <em>Why Countries Are Banning DeepSeek AI in 2026</em>, February 10, 2026. Australia emergency alert failure risk; no force majeure SLA coverage; EU AI Act non-compliance specifics; enterprise exit strategy requirements.<br>
+    → <a href="https://www.alibaba.com/product-insights/why-countries-are-banning-deepseek-ai-in-2026.html" target="_blank">https://www.alibaba.com/product-insights/why-countries-are-banning-deepseek-ai-in-2026.html</a></li>
+
+    <li id="ref13">Saeree / GrandLinux, <em>DeepSeek and China AI Risks</em>, March 31, 2026. 7-hour DeepSeek outage March 2025; repeated DDoS attacks; no SLA compensation; geopolitical access cut-off risk; abstraction layer recommendation.<br>
+    → <a href="https://www.grandlinux.com/en/blogs/deepseek-risk-china-ai.html" target="_blank">https://www.grandlinux.com/en/blogs/deepseek-risk-china-ai.html</a></li>
+
+    <li id="ref14">ALM Corp / Goldman Sachs cited in, <em>AI Job Displacement Statistics 2026–2030</em>, March 13, 2026. Goldman Sachs: each 1pp productivity gain raises short-run unemployment ~0.3pp; effect usually temporary within 2 years.<br>
+    → <a href="https://almcorp.com/blog/ai-job-displacement-statistics/" target="_blank">https://almcorp.com/blog/ai-job-displacement-statistics/</a></li>
+
+    <li id="ref15">UNODC, <em>Monitoring the Impact of Economic Crisis on Crime</em>, UN Office on Drugs and Crime. Unemployment-crime relationship: positive correlation for property crime, weak/contested for violent crime; literature split across 33 positive vs 19 negative studies.<br>
+    → <a href="https://www.unodc.org/documents/data-and-analysis/statistics/crime/GIVAS_Final_Report.pdf" target="_blank">https://www.unodc.org/documents/data-and-analysis/statistics/crime/GIVAS_Final_Report.pdf</a></li>
+
+    <li id="ref16">Ha, J. et al., <em>Suicides as a Response to Adverse Market Sentiment (1980–2016)</em>, NIH/PMC, 2017. Suicide rates correlate positively with unemployment (+0.298% per 1pp change) and lag initial economic stressor by up to 2 years, opening policy window for intervention.<br>
+    → <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5667934/" target="_blank">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5667934/</a></li>
+
+    <li id="ref17">FinOps Foundation, <em>State of FinOps 2026</em>. 73% of enterprises report AI costs exceeded projections; AI cost management responsibility at 98% of FinOps practices (up from 63% prior year); token-based costs structurally ungovernable with traditional cloud FinOps frameworks.<br>
+    → <a href="https://www.finops.org/insights/state-of-finops/" target="_blank">https://www.finops.org/insights/state-of-finops/</a> <em>(report cited via Optimum Partners / Orchestrator.dev analyses)</em></li>
+
+    <li id="ref18">Forrester Research, <em>CIO Survey 2026</em> (500 respondents). 70% of CIOs cite "AI cost unpredictability" as top barrier to adoption. Cited via:<br>
+    → <a href="https://markets.financialcontent.com/wral/article/abnewswire-2026-3-2-the-2026-ai-cost-crisis-the-rise-of-one-api-aggregation-platforms-and-their-potential-to-deliver-80-savings" target="_blank">https://markets.financialcontent.com/wral/article/abnewswire-2026-3-2-the-2026-ai-cost-crisis-the-rise-of-one-api-aggregation-platforms-and-their-potential-to-deliver-80-savings</a></li>
+
+    <li id="ref19">TechBuzz / TechCrunch Survey, <em>Investors Predict AI Labor Displacement Accelerates in 2026</em>. VCs confirming shift from augmentation to automation; AI scapegoating for non-AI-driven cuts; MIT: 11.7% of US jobs already automatable.<br>
+    → <a href="https://www.techbuzz.ai/articles/investors-predict-ai-labor-displacement-accelerates-in-2026" target="_blank">https://www.techbuzz.ai/articles/investors-predict-ai-labor-displacement-accelerates-in-2026</a></li>
+
+    <li id="ref20">DWU Consulting / CBS News / TechNode, <em>AI's Impact on the US Economy 2026</em>, March 15, 2026. 55,000 AI-attributed cuts in 2025 (12× increase year-on-year, per CBS News); 2026 YTD 9,200 of 45,000 tech cuts explicitly AI-attributed; Meta explicitly citing AI in headcount reduction decisions.<br>
+    → <a href="https://dwuconsulting.com/dwu-ai/ai-revolution-us-economy" target="_blank">https://dwuconsulting.com/dwu-ai/ai-revolution-us-economy</a></li>
+
+    <li id="ref21">TechJournal, <em>The 2026 AI Spending Reckoning: Why the Bills Came Due</em>, June 2026. Uber annual AI budget spent in 4 months after 80%+ engineer adoption; 95% of pilots no measurable profit; S&amp;P Global: 42% abandoned most AI projects in 2025.<br>
+    → <a href="https://techjournal.org/ai-spending-reckoning-2026" target="_blank">https://techjournal.org/ai-spending-reckoning-2026</a></li>
+
+    <li id="ref22">OECD, <em>Membership of Unions and Employers' Organisations, and Bargaining Coverage: Standing, But Losing Ground</em>, OECD Publishing, September 2025. Union density halved from 30% (1985) to 15% (2024); collective bargaining coverage fell from 47% to 33.6%; private sector density 10.1%; public sector 41.3%.<br>
+    → <a href="https://www.oecd.org/en/publications/membership-of-unions-and-employers-organisations-and-bargaining-coverage_fe47107c-en/full-report.html" target="_blank">https://www.oecd.org/en/publications/membership-of-unions-and-employers-organisations-and-bargaining-coverage_fe47107c-en/full-report.html</a></li>
+
+    <li id="ref23">CEPR / Bureau of Labor Statistics, <em>Union Density Continues to Decline</em>, January 28, 2025. US overall union density 9.9% (2024, record low); private sector 5.9% (record low); white-collar workers saw largest decline.<br>
+    → <a href="https://cepr.net/newsroom/union-density-continues-to-decline/" target="_blank">https://cepr.net/newsroom/union-density-continues-to-decline/</a></li>
+
+    <li id="ref24">Brookings Institution, <em>Hollywood Writers Went on Strike to Protect Their Livelihoods from Generative AI</em>, May 2024. WGA 148-day strike outcome; first AI-specific CBA in any industry; sector-level bargaining as enabling mechanism; union density in highest-AI-exposure occupations below national average; importance of labor law reform.<br>
+    → <a href="https://www.brookings.edu/articles/hollywood-writers-went-on-strike-to-protect-their-livelihoods-from-generative-ai-their-remarkable-victory-matters-for-all-workers/" target="_blank">https://www.brookings.edu/articles/hollywood-writers-went-on-strike-to-protect-their-livelihoods-from-generative-ai-their-remarkable-victory-matters-for-all-workers/</a></li>
+
+    <li id="ref25">Perkins Coie, <em>Generative AI in Movies and TV: How the 2023 SAG-AFTRA and WGA Contracts Address Generative AI</em>, April 2024. Detail of WGA AI provisions: AI not a writer; AI output not "literary material"; training data consent reservation. SAG-AFTRA: digital replicas, consent, compensation frameworks; limits of the agreements.<br>
+    → <a href="https://perkinscoie.com/insights/blog/generative-ai-movies-and-tv-how-2023-sag-aftra-and-wga-contracts-address-generative" target="_blank">https://perkinscoie.com/insights/blog/generative-ai-movies-and-tv-how-2023-sag-aftra-and-wga-contracts-address-generative</a></li>
+
+    <li id="ref26">Baker McKenzie / The Employer Report, <em>Navigating Labor's Response to AI</em>, June 2025. ILA port strike 2024 and 2025 CBA prohibiting fully automated technology; arbitration requirement for new tech. Las Vegas Culinary Workers AI advance notice provisions. ZeniMax/Microsoft AI bargaining agreement. SAG-AFTRA NLRB unfair labor practice charge over AI voice replacement.<br>
+    → <a href="https://www.bakermckenzie.com/en/insight/publications/2025/06/navigating-labors-response-to-ai" target="_blank">https://www.bakermckenzie.com/en/insight/publications/2025/06/navigating-labors-response-to-ai</a></li>
+
+    <li id="ref27">arXiv / academic literature on AI and union busting. AI monitoring used to identify organising activity; algorithmic management eliminating supervisory relationships; automated scheduling preventing stable shift patterns enabling organising. Documented in NLRB filings and platform labour literature.<br>
+    → <a href="https://arxiv.org/pdf/2603.03130" target="_blank">https://arxiv.org/pdf/2603.03130</a> <em>(see also: Littler, "Labor Organizing and AI: The Employer Perspective", May 2025: https://www.littler.com/news-analysis/asap/labor-organizing-and-ai-employer-perspective)</em></li>
+  </ol>
+
+  <div class="ref-section-title" style="margin-top:2rem;">Notes on Methodology</div>
+  <p style="font-size:0.68rem; line-height:1.7; color:var(--mid);">
+    <strong>Scenario probabilities</strong> (Section 6) are the authors' informed estimates based on institutional capacity, historical precedent, and current trajectory data as of June 2026. They are not actuarial calculations and will shift as governance frameworks develop or fail to materialise.<br><br>
+    <strong>Original policy proposals</strong>: The five-phase antibiotic protocol timelines, the 5% retraining investment ratio benchmark, and the Independent Transition Gate Authority model are original proposals by the authors, not sourced standards. The UK Apprenticeship Levy (0.5% of payroll for large employers) is cited as precedent logic for the mandatory investment ratio approach.<br><br>
+    <strong>Historical unemployment figures</strong>: US deindustrialisation peak (10.8%, 1982) sourced from archived academic literature on US recession cycles. GFC peak (10%, US) from BLS. COVID peak (14.7%, April 2020) from BLS. East Germany reunification (~18%) from comparative European labour market studies.
+  </p>
+</div>
+
+</body>
+</html>
